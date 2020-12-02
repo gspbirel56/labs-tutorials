@@ -64,17 +64,28 @@ func main() {
 	// This may be useful when updating records for several students in a class, for example.
 	// Note that updating a single record will replace its contents with whatever is specified, while UpdateMany() will
 	//	append the docuemnt or replace a record.
-	updateSingelRecord(ctx, bson.M{"title": "Inserted from Go"}, bson.M{
-		"title": "Inserted from Go",
-		"body": "This post was appended using the ReplaceOne function.",
-	})
+	// updateSingelRecord(ctx, bson.M{"title": "Inserted from Go"}, bson.M{
+	// 	"title": "Inserted from Go",
+	// 	"body": "This post was appended using the ReplaceOne function.",
+	// })
 
 
-	// Why not, update multiple records.
-	updateMultipleRecords(ctx, bson.M{"title": "Hello!"}, bson.D{
-		{"$set", bson.D{{"lastUpdated", time.Now()}},
-		},
-	})
+	// // Why not, update multiple records.
+	// updateMultipleRecords(ctx, bson.M{"title": "Hello!"}, bson.D{
+	// 	{"$set", bson.D{{"lastUpdated", time.Now()}},
+	// 	},
+	// })
+
+	// // Delete a post
+	// insertPost(ctx, bson.D{
+	// 	{"title", "Delete me!"},
+	// 	{"body", "I am about to demonstrate how to delete a file. For that, create me first in the Posts collection."},
+	// })
+	// // deletePost(ctx, bson.M{"title": "Delete me!"})
+	// deleteManyPosts(ctx, bson.M{"title": "Delete me!"})
+
+	// // Drop a collection and all of its associated documents
+	// dropCollection(ctx, postsCollection)
 }
 
 func insertPost(ctx context.Context, newPost bson.D) {
@@ -83,7 +94,7 @@ func insertPost(ctx context.Context, newPost bson.D) {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Record with ID %v inserted into the collection!", insertResult.InsertedID)
+	fmt.Printf("Record with ID %v inserted into the collection!\n", insertResult.InsertedID)
 }
 
 func getAllPosts(ctx context.Context, batches bool) {
@@ -144,4 +155,26 @@ func updateMultipleRecords(ctx context.Context, filter bson.M, appendObject bson
 		log.Fatal(err)
 	}
 	fmt.Printf("Updated %v document(s)\n", result.ModifiedCount)
+}
+
+func deletePost(ctx context.Context, filter bson.M) {
+	result, err := postsCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("deletePost removed %v document(s)\n", result.DeletedCount)
+}
+
+func deleteManyPosts(ctx context.Context, filter bson.M) {
+	result, err := postsCollection.DeleteMany(ctx, filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("deleteManyPosts removed %v document(s)\n", result.DeletedCount)
+}
+
+func dropCollection(ctx context.Context, collectionToDrop mongo.Collection) {
+	if err := collectionToDrop.Drop(ctx); err != nil {
+		log.Fatal(err)
+	}
 }

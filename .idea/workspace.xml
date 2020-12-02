@@ -20,7 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e05ad976-0f37-4f63-bd6a-efc3a3789b88" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Go API/First try with MongoDB/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Go and MongoDB/First try/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Go and MongoDB/First try/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
