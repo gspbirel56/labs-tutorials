@@ -58,7 +58,6 @@ func main() {
 	// getAllPosts(ctx, true) // better for a larger dataset
 	// getSinglePost(ctx, bson.M{"title": "Hello!"}) // note that this is a filter.
 		// Because it is a filter, the parameters have to be exact.
-	search(ctx, /*...*/)
 }
 
 func insertPost(ctx context.Context, newPost bson.D) {
@@ -103,8 +102,4 @@ func getSinglePost(ctx context.Context, filter bson.M) {
 		log.Fatal(err)
 	}
 	fmt.Println(postsFiltered)
-}
-
-func search(ctx context.Context, searchObject bson.D) {
-	
 }
