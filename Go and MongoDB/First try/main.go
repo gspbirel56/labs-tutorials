@@ -58,6 +58,23 @@ func main() {
 	// getAllPosts(ctx, true) // better for a larger dataset
 	// getSinglePost(ctx, bson.M{"title": "Hello!"}) // note that this is a filter.
 		// Because it is a filter, the parameters have to be exact.
+
+	// Update a single record
+	// Note that there is an UpdateMany() function as referenced here: https://www.mongodb.com/blog/post/quick-start-golang--mongodb--how-to-update-documents.
+	// This may be useful when updating records for several students in a class, for example.
+	// Note that updating a single record will replace its contents with whatever is specified, while UpdateMany() will
+	//	append the docuemnt or replace a record.
+	updateSingelRecord(ctx, bson.M{"title": "Inserted from Go"}, bson.M{
+		"title": "Inserted from Go",
+		"body": "This post was appended using the ReplaceOne function.",
+	})
+
+
+	// Why not, update multiple records.
+	updateMultipleRecords(ctx, bson.M{"title": "Hello!"}, bson.D{
+		{"$set", bson.D{{"lastUpdated", time.Now()}},
+		},
+	})
 }
 
 func insertPost(ctx context.Context, newPost bson.D) {
@@ -102,4 +119,29 @@ func getSinglePost(ctx context.Context, filter bson.M) {
 		log.Fatal(err)
 	}
 	fmt.Println(postsFiltered)
+}
+
+func updateSingelRecord(ctx context.Context, filter bson.M, replacementObject bson.M) {
+	result, err := postsCollection.ReplaceOne(
+		ctx,
+		filter,
+		replacementObject, // Just figured this out, you need a comma to continue the statement to the next line in Go.
+							// Otherwise the compiler will throw an error for unexpected end of line or something.
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Replaced %v document(s)\n", result.ModifiedCount)
+}
+
+func updateMultipleRecords(ctx context.Context, filter bson.M, appendObject bson.D) {
+	result, err := postsCollection.UpdateMany(
+		ctx,
+		filter,
+		appendObject,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Updated %v document(s)\n", result.ModifiedCount)
 }
